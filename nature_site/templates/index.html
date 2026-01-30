@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Nature 论文摘要</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { margin-bottom: 20px; }
+        .month, .category { cursor: pointer; background: #f0f0f0; padding: 10px; margin-top: 5px; border-radius: 5px; }
+        .month:hover, .category:hover { background: #e0e0e0; }
+        .articles, .cat-articles { display: none; margin-left: 20px; margin-top: 5px; }
+        .article { margin-bottom: 10px; padding: 10px; border-left: 3px solid #007acc; background: #f9f9f9; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Nature 论文摘要网站</h1>
+    
+
+    {% for month, cats in month_groups.items() %}
+        <div class="month" onclick="toggleArticles('month-{{ month }}')">
+            {{ month }} ({{ month_counts[month] }} 篇)
+        </div>
+        <div class="articles" id="month-{{ month }}">
+            {% for cat_key, articles in cats.items() %}
+                <div class="category" onclick="toggleArticles('cat-{{ month }}-{{ cat_key }}')">
+                    {{ categories[cat_key] if cat_key in categories else cat_key }} ({{ articles|length }} 篇)
+                </div>
+                <div class="cat-articles" id="cat-{{ month }}-{{ cat_key }}">
+                    {% for article in articles %}
+                        <div class="article">{{ article.content | safe }}</div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    <script>
+        function toggleArticles(id) {
+            const el = document.getElementById(id);
+            if (el.style.display === "none" || el.style.display === "") {
+                el.style.display = "block";
+            } else {
+                el.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
